@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.GoodsMapper">
+    <resultMap id="GoodsMap" type="pojo.Goods" autoMapping="true"></resultMap>
+
+    <sql id="goods_columns">
+        goods_id,goods_name,goods_price,goods_state,goods_category,goods_picture,goods_intro,goods_discount,goods_createtime,goods_updatetime,is_deleted
+    </sql>
+
+    <select id="selectGoodsPage" resultMap="GoodsMap">
+        select <include refid="goods_columns"/>
+        from t_goods
+        <where>
+        <if test="vo.GoodsName != null and vo.GoodsName !=''">
+            and goods_name like CONCAT('%',#{vo.GoodsName},'%')
+        </if>
+
+        <if test="vo.GoodsCategory != null and vo.GoodsCategory !=''">
+            and goods_category like CONCAT('%',#{vo.GoodsCategory},'%')
+        </if>
+
+            and is_deleted = 0
+
+        </where>
+        order by goods_id desc
+    </select>
+
+    <select id="selectTopGoods" resultMap="GoodsMap">
+        SELECT * FROM coffee.t_goods
+        where is_deleted = 0
+        order by goods_number desc
+    </select>
+</mapper>

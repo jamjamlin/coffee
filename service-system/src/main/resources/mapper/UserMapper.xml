@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.UserMapper">
+    <resultMap id="UserMap" type="pojo.User" autoMapping="true"></resultMap>
+    <!-- 用于条件分页查询 -->
+    <sql id="user_columns">
+        user_id,user_name,user_age,user_phone,user_sex,user_password,user_createtime,user_updatetime,is_deleted
+    </sql>
+
+    <select id="selectUserPage" resultMap="UserMap">
+        select <include refid="user_columns" />
+        from t_user
+        <where>
+            <if test="vo.UserName != null and vo.UserName != ''">
+                and user_name like CONCAT('%',#{vo.UserName},'%')
+            </if>
+            and is_deleted = 0
+        </where>
+        order by user_id desc
+    </select>
+</mapper>

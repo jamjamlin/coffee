@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.TalkMapper">
+    <resultMap id="TalkMap" type="pojo.Talk" autoMapping="true"></resultMap>
+
+    <select id="selectTalkPage" resultMap="TalkMap">
+        select * from t_talk
+        where talk_category = 0
+        order by talk_createtime desc
+    </select>
+</mapper>

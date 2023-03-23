@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.OrderMapper">
+    <resultMap id="OrderMap" type="pojo.Order" autoMapping="true"></resultMap>
+
+    <select id="selectOrderPage" resultMap="OrderMap">
+        select * from t_order group by order_id desc
+    </select>
+
+
+    <select id="selectFinnishOrderPage" resultMap="OrderMap">
+        select * from t_order
+        where order_state = ' 已完成'
+        group by order_id desc
+    </select>
+
+    <select id="selectOrderPageByUserId" resultMap="OrderMap">
+        select  * from t_order
+        where user_id = #{userid}
+        group by order_id desc
+    </select>
+
+    <select id="viewSalesByTime" resultType="float">
+        select sum(order_realamount)
+        FROM coffee.t_order
+        where order_state = '已完成'
+        and order_createtime > DATE_SUB(NOW(),INTERVAL #{time} day)
+    </select>
+
+    <select id="viewSalesByCategory" resultType="float">
+        select sum(order_realamount)
+        FROM coffee.t_order
+        where order_state = '已完成'
+        and order_content like CONCAT('%',#{coffeecategory},'%')
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.SupportMapper">
+    <resultMap id="SupportMap" type="pojo.Support" autoMapping="true"></resultMap>
+
+
+
+    <select id="selectTopSupport" resultMap="SupportMap">
+        select *,
+        count(goods_name) from t_support
+        where is_deleted = 0
+        group by goods_name
+    </select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="system.mapper.CommentMapper">
+    <resultMap id="CommentMap" type="pojo.Comment" autoMapping="true"></resultMap>
+
+    <select id="selectCommentByGoodsId" resultMap="CommentMap">
+        select * from t_comment
+        where is_deleted = 0
+        and goods_id = #{goodsid}
+    </select>
+
+</mapper>
