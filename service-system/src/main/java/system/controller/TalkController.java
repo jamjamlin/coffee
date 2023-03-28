@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pojo.Talk;
 import system.service.TalkService;
+import vo.UserIdVo;
 
 import java.util.List;
 
@@ -32,10 +33,10 @@ public class TalkController {
 
     }
     @ApiOperation("顾客留言查看根据顾客id")
-    @GetMapping("findtalkbyuserid/{userid}")
-    public Result findTalkByUserId(@PathVariable int userid){
+    @PostMapping("findtalkbyuserid")
+    public Result findTalkByUserId(@RequestBody UserIdVo userid){
         QueryWrapper<Talk> QueryWrapper = new QueryWrapper<>();
-        QueryWrapper.eq("user_id",userid);
+        QueryWrapper.eq("user_id",userid.getUserId());
         List<Talk> talkList = talkService.list(QueryWrapper);
         return Result.ok(talkList);
     }
@@ -52,9 +53,9 @@ public class TalkController {
     }
 
     @ApiOperation("分页查看所有留言")
-    @GetMapping("findalltalk/{page}/{limit}")
-    public Result findAllTalk(@PathVariable long page, @PathVariable long limit){
-        Page<Talk> talkpage = new Page<>(page, limit);
+    @PostMapping("findalltalk")
+    public Result findAllTalk(@RequestBody vo.Page p){
+        Page<Talk> talkpage = new Page<>(p.getPage(), p.getLimit());
 
         IPage<Talk> page1 = talkService.selectTalkPage(talkpage);
 

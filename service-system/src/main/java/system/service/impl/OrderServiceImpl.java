@@ -17,14 +17,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public IPage<Order> selectFinnishOrderPage(Long page) {
-        IPage<Order> IPage = baseMapper.selectFinnishOrderPage(page);
+    public IPage<Order> selectFinnishOrderPage(Page<Order> OrderPage) {
+        IPage<Order> IPage = baseMapper.selectFinnishOrderPage(OrderPage);
         return IPage;
     }
 
     @Override
-    public IPage<Order> selectOrderPageByUserId(Long page, int userid) {
-        IPage<Order> iPage = baseMapper.selectOrderPageByUserId(page, userid);
+    public IPage<Order> selectOrderPageByUserId(Page<Order> orderPage, int userid) {
+        IPage<Order> iPage = baseMapper.selectOrderPageByUserId(orderPage, userid);
         return iPage;
 
     }

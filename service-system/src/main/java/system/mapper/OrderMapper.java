@@ -12,9 +12,9 @@ import pojo.Order;
 public interface OrderMapper extends BaseMapper<Order> {
     public IPage<Order> selectOrderPage(Page<Order> orderPage);
 
-    public IPage<Order> selectFinnishOrderPage(Long page);
+    public IPage<Order> selectFinnishOrderPage(Page<Order> orderPage);
 
-    public IPage<Order> selectOrderPageByUserId(Long page, int userid);
+    public IPage<Order> selectOrderPageByUserId(Page<Order> orderPage, int userid);
 
     public float viewSalesByTime(int time);
 

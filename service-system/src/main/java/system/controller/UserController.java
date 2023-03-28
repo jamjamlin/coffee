@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pojo.User;
 import system.service.UserService;
+import vo.UserLoginVo;
 import vo.UserQueryVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 //浏览器调用
 @RequestMapping("/admin/system/user")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -46,10 +49,10 @@ public class UserController {
     @ApiOperation("条件分页查询")
     //条件分页查询
     //page当前页 limit 每页记录数
-    @GetMapping("{page}/{limit}")
-    public Result findPageQueryUser(@PathVariable Long page, @PathVariable Long limit, UserQueryVo userQueryVo){
+    @PostMapping("queryuser")
+    public Result findPageQueryUser(UserQueryVo userQueryVo){
         //创建page对象
-        Page<User> userPage = new Page<>(page,limit);
+        Page<User> userPage = new Page<>(userQueryVo.getPage(), userQueryVo.getLimit());
 
         //调用service方法
         IPage<User> page1 = userService.selectUserPage(userPage,userQueryVo);
@@ -63,7 +66,7 @@ public class UserController {
     //添加注册新用户
     //@RequestBody 只在post中可用
     //传递json格式，把json格式数据封装到对象里面{...}
-    @PostMapping("saveuser")
+    @RequestMapping ("saveuser")
     public Result saveUSer(@RequestBody User user){
         boolean isSuccess = userService.save(user);
         if(isSuccess){
@@ -104,12 +107,15 @@ public class UserController {
     }
 
     @ApiOperation("登录接口")
-    @GetMapping("loadinguser/{phone}/{password}")
-    public Result loadingUser(@PathVariable String phone ,@PathVariable String password){
+    @GetMapping("loadinguser")
+    public Result loadingUser(  UserLoginVo loginVo){
+        System.out.println(loginVo.getPassword());
+        System.out.println(loginVo.getPhone());
         QueryWrapper<User> wrapper = new QueryWrapper();
-        wrapper.eq("user_phone",phone);
-        wrapper.eq("user_password",password);
+        wrapper.eq("user_phone",loginVo.getPhone());
+        wrapper.eq("user_password",loginVo.getPassword());
         List<User> list = userService.list(wrapper);
+        System.out.println(list.toString());
         return Result.ok(list);
     }
 

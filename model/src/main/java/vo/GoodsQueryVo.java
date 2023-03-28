@@ -40,4 +40,42 @@ public class GoodsQueryVo implements Serializable {
     private String GoodsState;
 
     private String GoodsCategory;
+
+    private Long page;
+
+    public String getGoodsCategory() {
+        return GoodsCategory;
+    }
+
+    public void setGoodsCategory(String goodsCategory) {
+        GoodsCategory = goodsCategory;
+    }
+
+    public Long getPage() {
+        return page;
+    }
+
+    public void setPage(Long page) {
+        this.page = page;
+    }
+
+    public Long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Long limit) {
+        this.limit = limit;
+    }
+
+    private Long limit;
+
+    public int getGoodsId() {
+        return GoodsId;
+    }
+
+    public void setGoodsId(int goodsId) {
+        GoodsId = goodsId;
+    }
+
+    private int GoodsId;
 }

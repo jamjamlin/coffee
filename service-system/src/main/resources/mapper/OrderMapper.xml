@@ -12,7 +12,7 @@
 
     <select id="selectFinnishOrderPage" resultMap="OrderMap">
         select * from t_order
-        where order_state = ' 已完成'
+        where order_state = '已完成'
         group by order_id desc
     </select>
 

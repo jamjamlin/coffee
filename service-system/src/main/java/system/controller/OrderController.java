@@ -14,6 +14,9 @@ import pojo.Goods;
 import pojo.Order;
 import system.service.GoodsService;
 import system.service.OrderService;
+import vo.CoffeeCateGoryVo;
+import vo.Time;
+import vo.UserQueryVo;
 
 import java.util.List;
 
@@ -38,9 +41,9 @@ public class OrderController {
 
 
     @ApiOperation("分页查找所有订单")
-    @GetMapping("{page}/{limit}")
-    public Result findAllPageOrder(@PathVariable Long page, @PathVariable Long limit){
-        Page<Order> orderPage  = new Page<>(page,limit);
+    @PostMapping("queryallorder")
+    public Result findAllPageOrder(@RequestBody vo.Page page){
+        Page<Order> orderPage  = new Page<>(page.getPage(), page.getLimit());
         IPage<Order> page1 = orderService.selectOrderPage(orderPage);
         return  Result.ok(page1);
     }
@@ -97,18 +100,19 @@ public class OrderController {
         return Result.ok(orderList);
     }
     @ApiOperation("分页查看已完成的订单接口")
-    @GetMapping("findfinnishorder/{page}/{limit}")
-    public Result findfinnishOrder(@PathVariable Long page, @PathVariable Long limit){
-        Page<Order> orderPage = new Page<>(page,limit);
-        IPage<Order> page1 = orderService.selectFinnishOrderPage(page);
+    @PostMapping("findfinnishorder")
+    public Result findfinnishOrder(@RequestBody vo.Page page){
+        Page<Order> orderPage = new Page<>(page.getPage(), page.getLimit());
+        IPage<Order> page1 = orderService.selectFinnishOrderPage(orderPage);
         return Result.ok(page1);
     }
 
     @ApiOperation("根据用户id分页查看历史订单")
-    @GetMapping("findorderbyuserid/{page}/{limit}/{userid}")
-    public Result findOrderPageByUserId(@PathVariable Long page, @PathVariable Long limit,@PathVariable int userid){
-        Page<Order> orderPage = new Page<>(page,limit);
-        IPage<Order> page1 = orderService.selectOrderPageByUserId(page, userid);
+    @PostMapping("findorderbyuserid")
+    public Result findOrderPageByUserId(@RequestBody UserQueryVo userQueryVo){
+        Page<Order> orderPage = new Page<>(userQueryVo.getPage(), userQueryVo.getLimit());
+        int userid = Integer.parseInt(userQueryVo.getUserId());
+        IPage<Order> page1 = orderService.selectOrderPageByUserId(orderPage,userid);
         return Result.ok(page1);
     }
 
@@ -190,15 +194,15 @@ public class OrderController {
     }
 
     @ApiOperation("根据时间段查看销售情况")
-    @GetMapping("viewsalesbytime/{time}")
-    public Result viewSalesByTime(@PathVariable int time){
-        float v = orderService.viewSalesByTime(time);
+    @PostMapping("viewsalesbytime")
+    public Result viewSalesByTime(@RequestBody Time time){
+        float v = orderService.viewSalesByTime(time.getTime());
         return Result.ok(v);
     }
     @ApiOperation("根据类型查看销售情况")
-    @GetMapping("viewsalesbycoffeecategory/{coffeecategory}")
-    public Result viewSalesByCoffeeCategory(@PathVariable String coffeecategory){
-        float v = orderService.viewSalesByCategory(coffeecategory);
+    @PostMapping("viewsalesbycoffeecategory")
+    public Result viewSalesByCoffeeCategory(@RequestBody CoffeeCateGoryVo coffeeCateGoryVo){
+        float v = orderService.viewSalesByCategory(coffeeCateGoryVo.getGoodsCategory());
         return Result.ok(v);
     }
 }

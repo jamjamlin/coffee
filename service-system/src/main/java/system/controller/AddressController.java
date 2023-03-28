@@ -23,10 +23,10 @@ public class AddressController {
     private AddressService addressService;
 
     @ApiOperation("根据用户id查询地址接口")
-    @GetMapping("findbyuserid/{userid}")
-    public Result findAddressByUserId(@PathVariable Long userid){
+    @PostMapping("findbyuserid")
+    public Result findAddressByUserId(@RequestBody vo.UserIdVo userIdVo){
         QueryWrapper<Address> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userid);
+        wrapper.eq("user_id",userIdVo.getUserId());
         List<Address> addressList = addressService.list(wrapper);
         return Result.ok(addressList);
     }

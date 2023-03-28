@@ -6,7 +6,7 @@
     <resultMap id="UserMap" type="pojo.User" autoMapping="true"></resultMap>
     <!-- 用于条件分页查询 -->
     <sql id="user_columns">
-        user_id,user_name,user_age,user_phone,user_sex,user_password,user_createtime,user_updatetime,is_deleted
+        user_id,user_name,user_age,user_phone,user_sex,user_password,user_createtime,user_updatetime,is_deleted,user_role
     </sql>
 
     <select id="selectUserPage" resultMap="UserMap">

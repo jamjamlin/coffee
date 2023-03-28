@@ -27,10 +27,10 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @ApiOperation("分页查询所有商品接口")
-    @GetMapping("{page}/{limit}")
-    public Result findPageAllGoods(@PathVariable Long page, @PathVariable Long limit, GoodsQueryVo goodsQueryVo){
+    @PostMapping("querygoods")
+    public Result findPageAllGoods(@RequestBody GoodsQueryVo goodsQueryVo){
 
-        Page<Goods> goodsPage = new Page<>(page,limit);
+        Page<Goods> goodsPage = new Page<>(goodsQueryVo.getPage(), goodsQueryVo.getLimit());
 
 
         IPage<Goods> page1 = goodsService.selectGoodsPage(goodsPage,goodsQueryVo);
@@ -97,10 +97,10 @@ public class GoodsController {
             return Result.fail();
     }
 
-    @ApiOperation("查找销量前n商品")
-    @GetMapping("topgoods/{num}")
-    public Result topGoods(@PathVariable int num){
-        Page<Goods> goodsPage = new Page<>(1,num);
+    @ApiOperation("查找销量前8商品")
+    @GetMapping("topgoods")
+    public Result topGoods(){
+        Page<Goods> goodsPage = new Page<>(1,8);
         IPage iPage = goodsService.selectTopGoods(goodsPage);
         return Result.ok(iPage);
     }

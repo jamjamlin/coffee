@@ -38,4 +38,7 @@ public class User implements Serializable {
     @TableLogic
     @TableField("is_deleted")
     private int UserIsDeleted;
+
+    @TableField("user_role")
+    private String UserRole;
 }

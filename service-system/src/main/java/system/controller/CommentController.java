@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pojo.Comment;
 import system.service.CommentService;
+import vo.GoodsQueryVo;
+import vo.UserIdVo;
 
 import java.util.List;
 
@@ -23,12 +25,12 @@ public class CommentController {
     private CommentService commentService;
 
     @ApiOperation("根据商品id查询点评")
-    @GetMapping("{goodsid}/{page}/{limit}")
-    public Result findPageQueryCommentByGoodsId(@PathVariable int goodsid,@PathVariable Long page, @PathVariable Long limit){
+    @PostMapping("querycommentbygoodsid")
+    public Result findPageQueryCommentByGoodsId(@RequestBody GoodsQueryVo goodsQueryVo){
 
-        Page<Comment> commentPage = new Page<>(page,limit);
+        Page<Comment> commentPage = new Page<>(goodsQueryVo.getPage(), goodsQueryVo.getLimit());
 
-        IPage<Comment> page1 = commentService.selectCommentByGoodsId(commentPage, goodsid);
+        IPage<Comment> page1 = commentService.selectCommentByGoodsId(commentPage, goodsQueryVo.getGoodsId());
 
         System.out.println(page1);
         return Result.ok(page1);
@@ -36,10 +38,10 @@ public class CommentController {
     }
 
     @ApiOperation("根据用户id查询点评")
-    @GetMapping("findcommentbyuserid/{userid}")
-    public Result findCommentByUserId(@PathVariable int userid){
+    @PostMapping("findcommentbyuserid")
+    public Result findCommentByUserId(@RequestBody UserIdVo userid){
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userid);
+        wrapper.eq("user_id",userid.getUserId());
         List<Comment> commentList = commentService.list(wrapper);
         return Result.ok(commentList);
 
