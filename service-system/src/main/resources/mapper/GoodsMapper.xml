@@ -32,4 +32,10 @@
         where is_deleted = 0
         order by goods_number desc
     </select>
+
+    <select id="selectStarGoods" resultMap="GoodsMap">
+        SELECT * FROM coffee.t_goods
+        where is_deleted = 0
+        order by goods_state desc
+    </select>
 </mapper>

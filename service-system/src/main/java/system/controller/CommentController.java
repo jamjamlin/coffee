@@ -2,6 +2,7 @@ package system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import common.result.Result;
@@ -10,7 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pojo.Comment;
+import pojo.Goods;
 import system.service.CommentService;
+import system.service.GoodsService;
 import vo.GoodsQueryVo;
 import vo.UserIdVo;
 
@@ -23,6 +26,8 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+
 
     @ApiOperation("根据商品id查询点评")
     @PostMapping("querycommentbygoodsid")
@@ -52,6 +57,7 @@ public class CommentController {
     @PostMapping("savecomment")
     public  Result saveComment(@RequestBody Comment comment){
         boolean isSuccess = commentService.save(comment);
+
         if(isSuccess){
             return Result.ok();
         }else

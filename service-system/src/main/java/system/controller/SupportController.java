@@ -1,5 +1,6 @@
 package system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import common.result.Result;
@@ -7,7 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pojo.Goods;
 import pojo.Support;
+import system.service.GoodsService;
 import system.service.SupportService;
 
 @Api(tags = "点赞管理接口")
@@ -18,11 +21,18 @@ public class SupportController {
     @Autowired
     private SupportService supportService;
 
+    @Autowired
+    private GoodsService goodsService;
+
     @ApiOperation("添加点赞")
     @PostMapping("savesupport")
     public Result saveSupport(@RequestBody Support support){
         boolean isSuccess = supportService.save(support);
-        if(isSuccess){
+        UpdateWrapper<Goods> goodsUpdateWrapper =new UpdateWrapper<>();
+        goodsUpdateWrapper.eq("goods_id",support.getGoodsid());
+        goodsUpdateWrapper.setSql("goods_state =  goods_state + 1");
+        boolean update = goodsService.update(goodsUpdateWrapper);
+        if(isSuccess&&update){
             return Result.ok();
         }else
             return Result.fail();

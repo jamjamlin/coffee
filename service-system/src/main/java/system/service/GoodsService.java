@@ -11,4 +11,6 @@ public interface GoodsService extends IService<Goods> {
     IPage<Goods> selectGoodsPage(Page<Goods> goodsPage,GoodsQueryVo goodsQueryVo);
 
     IPage selectTopGoods(Page<Goods> goodsPage);
+
+    IPage selectStarGoods(Page<Goods> goodsPage);
 }

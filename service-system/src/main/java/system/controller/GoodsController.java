@@ -2,6 +2,7 @@ package system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import common.result.Result;
@@ -12,10 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Goods;
 import system.service.GoodsService;
+import vo.GoodsManage;
 import vo.GoodsQueryVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.UUID;
 
 @Api(tags = "商品管理接口")
@@ -28,14 +33,43 @@ public class GoodsController {
 
     @ApiOperation("分页查询所有商品接口")
     @PostMapping("querygoods")
-    public Result findPageAllGoods(@RequestBody GoodsQueryVo goodsQueryVo){
+    public Result findPageAllGoods(@RequestBody GoodsQueryVo goodsQueryVo, HttpServletResponse response){
 
         Page<Goods> goodsPage = new Page<>(goodsQueryVo.getPage(), goodsQueryVo.getLimit());
 
 
         IPage<Goods> page1 = goodsService.selectGoodsPage(goodsPage,goodsQueryVo);
 
-        System.out.println(page1);
+//        Long index;
+//        index = goodsQueryVo.getLimit();
+//        for(int i=0;i<index;i++) {
+//            System.out.println(page1.getRecords().get(i).getGoodsPicture());
+//            String path = page1.getRecords().get(i).getGoodsPicture();
+//            String text = "attachment;filename="+page1.getRecords().get(i).getGoodsId()+".jpg";
+//            System.out.println(text);
+//            try{
+//                //图片的绝对路径（工程路径+图片的相对路径）
+//                //创建输入流
+//                 FileInputStream stream = new FileInputStream(path);
+//                //创建字节数组，获取当前文件中所有的字节数
+//                byte[] bytes = new byte[stream.available()];
+//                //将流读到字节数组中
+//                stream.read(bytes);
+//                //设置响应头信息，Content-Disposition响应头表示收到的数据怎么处理（固定），attachment表示下载使用（固定），filename指定下载的文件名（下载时会在客户端显示该名字）
+//                response.addHeader("Content-Disposition", text);
+//                //创建输出流
+//                OutputStream out = response.getOutputStream();
+//                out.write(bytes);
+//
+//                //关闭资源
+//                stream.close();
+//                out.flush();
+//
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
+//
+//        }
 
         return Result.ok(page1);
     }
@@ -103,5 +137,26 @@ public class GoodsController {
         Page<Goods> goodsPage = new Page<>(1,8);
         IPage iPage = goodsService.selectTopGoods(goodsPage);
         return Result.ok(iPage);
+    }
+
+    @ApiOperation("查找好评前8的商品")
+    @GetMapping("stargoods")
+    public Result starGoods(){
+        Page<Goods> goodsPage = new Page<>(1,8);
+        IPage iPage = goodsService.selectStarGoods(goodsPage);
+        return Result.ok(iPage);
+    }
+
+    @ApiOperation("修改商品优惠")
+    @PostMapping("updategoodsdiscount")
+    public Result updateGoodsDiscount(@RequestBody GoodsManage goodsManage){
+        UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<>();
+        goodsUpdateWrapper.eq("goods_id",goodsManage.getGoodsId());
+        goodsUpdateWrapper.set("goods_discount",goodsManage.getGoodsDiscount());
+        boolean isSuccess = goodsService.update(goodsUpdateWrapper);if(isSuccess){
+            return Result.ok();
+        }else
+            return Result.fail();
+
     }
 }

@@ -193,16 +193,17 @@ public class OrderController {
             return Result.fail();
     }
 
+
     @ApiOperation("根据时间段查看销售情况")
-    @PostMapping("viewsalesbytime")
-    public Result viewSalesByTime(@RequestBody Time time){
-        float v = orderService.viewSalesByTime(time.getTime());
+    @PostMapping("viewsalesbytime/{time}")
+    public Result viewSalesByTime(@PathVariable int time){
+        float v = orderService.viewSalesByTime(time);
         return Result.ok(v);
     }
     @ApiOperation("根据类型查看销售情况")
-    @PostMapping("viewsalesbycoffeecategory")
-    public Result viewSalesByCoffeeCategory(@RequestBody CoffeeCateGoryVo coffeeCateGoryVo){
-        float v = orderService.viewSalesByCategory(coffeeCateGoryVo.getGoodsCategory());
+    @PostMapping("viewsalesbycoffeecategory/{category}")
+    public Result viewSalesByCoffeeCategory(@PathVariable String  category){
+        float v = orderService.viewSalesByCategory(category);
         return Result.ok(v);
     }
 }

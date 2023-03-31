@@ -55,7 +55,10 @@ public class Order implements Serializable {
     private int OrderIsDeleted;
 
     @TableField("goods_id")
-    private String Goodsid;
+    private String GoodsId;
+
+    @TableField("goods_name")
+    private String GoodsName;
 
 
 

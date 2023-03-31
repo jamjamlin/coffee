@@ -14,4 +14,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
     public IPage<Goods> selectGoodsPage(Page<Goods> goodsPage, @Param("vo")GoodsQueryVo goodsQueryVo);
 
     public IPage<Goods> selectTopGoods(Page<Goods> goodsPage);
+
+    public IPage<Goods> selectStarGoods(Page<Goods> goodsPage);
 }

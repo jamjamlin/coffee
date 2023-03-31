@@ -1,6 +1,7 @@
 package system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import common.result.Result;
@@ -66,7 +67,7 @@ public class UserController {
     //添加注册新用户
     //@RequestBody 只在post中可用
     //传递json格式，把json格式数据封装到对象里面{...}
-    @RequestMapping ("saveuser")
+    @PostMapping ("saveuser")
     public Result saveUSer(@RequestBody User user){
         boolean isSuccess = userService.save(user);
         if(isSuccess){
@@ -117,6 +118,20 @@ public class UserController {
         List<User> list = userService.list(wrapper);
         System.out.println(list.toString());
         return Result.ok(list);
+    }
+    @ApiOperation("提升管理接口")
+    @PostMapping("promoteuser/{userid}")
+    public Result promoteUser(@PathVariable String userid){
+        UpdateWrapper<User> wrapper =new UpdateWrapper<>();
+        wrapper.eq("user_id",userid);
+        wrapper.setSql("user_role = '管理'");
+        boolean isSuccess = userService.update(wrapper);
+        if(isSuccess){
+            return Result.ok();
+        }else
+            return Result.fail();
+
+
     }
 
 }

@@ -25,4 +25,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>implements 
         IPage<Goods> page2 = baseMapper.selectTopGoods(goodsPage);
         return page2;
     }
+
+    @Override
+    public IPage selectStarGoods(Page<Goods> goodsPage) {
+        IPage<Goods> page3 = baseMapper.selectStarGoods(goodsPage);
+        return page3;
+    }
 }
