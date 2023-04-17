@@ -9,6 +9,7 @@ import common.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pojo.Goods;
@@ -74,34 +75,44 @@ public class GoodsController {
         return Result.ok(page1);
     }
 
-    //未完善！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
     @ApiOperation("添加商品接口")
-    @PostMapping("savegoods")
-    public Result saveGoods(@RequestBody Goods goods ,MultipartFile file){
-        //获取上传文件的文件名
-        String filename = file.getOriginalFilename();
+    @PostMapping("savegoods/{goodsname}/{goodscategory}/{goodsprice}/{goodsintro}/{goodsdiscount}")
+    public Result saveGoods(MultipartFile file ,@PathVariable String goodsname,@PathVariable String goodsprice,@PathVariable String goodscategory,@PathVariable String goodsintro,@PathVariable String goodsdiscount){
 
-        //处理文件同名问题
-         String suffixname  = filename.substring(filename.lastIndexOf("."));
+        Goods goods = new Goods();
+        goods.setGoodsCategory(goodscategory);
+        goods.setGoodsDiscount(goodsdiscount);
+        goods.setGoodsIntro(goodsintro);
+        goods.setGoodsName(goodsname);
+        goods.setGoodsPrice(goodsprice);
 
-         filename = UUID.randomUUID().toString() + suffixname; // 拼接名字
-        String filePath = "src/main/pic";
-        File filedir = new File(filePath);
-        //判断是否存在保存目录
-        if (!filedir.exists()){
-            filedir.mkdir();
+        System.out.println(goods.toString());
+
+        //图片校验（图片是否为空,图片大小，上传的是不是图片、图片类型（例如只能上传png）等等）
+        if (file.isEmpty()) {
+            return Result.fail("图片上传失败");
         }
-        //separator 路径分隔符
-        String path = filePath+File.separator + filename;
+        //可以自己加一点校验 例如上传的是不是图片或者上传的文件是不是png格式等等 这里省略
+        //获取原来的文件名和后缀
+        String originalFilename = file.getOriginalFilename();
+//        String ext = "." + FilenameUtils.getExtension(orgFileName); --需要导依赖
+        String ext = "."+ originalFilename.split("\\.")[1];
+        //生成一个新的文件名（以防有重复的名字存在导致被覆盖）
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String newName = uuid + ext;
+        //拼接图片上传的路径 url+图片名
+        ApplicationHome applicationHome = new ApplicationHome(this.getClass());
+        String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\";
+        String path = pre + newName;
+        goods.setGoodsPicture(path);
 
         try {
-            //文件保存
             file.transferTo(new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //传入需要保存的实例
-        goods.setGoodsPicture(path);
+
 
         boolean isSuccess = goodsService.save(goods);
         if(isSuccess){
@@ -158,5 +169,11 @@ public class GoodsController {
         }else
             return Result.fail();
 
+    }
+    @ApiOperation("根据商品id查询接口")
+    @PostMapping("findgoodsbygoodsid/{goodsid}")
+    public Result findGoodsByGoodsId(@PathVariable String goodsid){
+        Goods goods = goodsService.getById(goodsid);
+        return Result.ok(goods);
     }
 }

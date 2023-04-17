@@ -23,10 +23,10 @@ public class AddressController {
     private AddressService addressService;
 
     @ApiOperation("根据用户id查询地址接口")
-    @PostMapping("findbyuserid")
-    public Result findAddressByUserId(@RequestBody vo.UserIdVo userIdVo){
+    @PostMapping("findbyuserid/{userid}")
+    public Result findAddressByUserId(@PathVariable String userid){
         QueryWrapper<Address> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id",userIdVo.getUserId());
+        wrapper.eq("user_id",userid);
         List<Address> addressList = addressService.list(wrapper);
         return Result.ok(addressList);
     }
@@ -60,6 +60,12 @@ public class AddressController {
             return Result.ok();
         }else
             return Result.fail();
+    }
+    @ApiOperation("根据地址id查询接口")
+    @PostMapping("findaddressbyaddressid/{addressid}")
+    public Result findAddressByAddressId(@PathVariable int addressid){
+        Address address = addressService.getById(addressid);
+        return Result.ok(address);
     }
 
 }
