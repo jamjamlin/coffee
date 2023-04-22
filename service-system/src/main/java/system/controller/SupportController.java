@@ -29,7 +29,7 @@ public class SupportController {
     public Result saveSupport(@RequestBody Support support){
         boolean isSuccess = supportService.save(support);
         UpdateWrapper<Goods> goodsUpdateWrapper =new UpdateWrapper<>();
-        goodsUpdateWrapper.eq("goods_id",support.getGoodsid());
+        goodsUpdateWrapper.eq("goods_id",support.getGoodsId());
         goodsUpdateWrapper.setSql("goods_state =  goods_state + 1");
         boolean update = goodsService.update(goodsUpdateWrapper);
         if(isSuccess&&update){
@@ -40,7 +40,10 @@ public class SupportController {
     @ApiOperation("取消点赞")
     @DeleteMapping("deletesupport")
     public Result deleteSupport(@RequestBody Support support){
-        boolean isSuccess = supportService.removeById(support.getSupportId());
+        UpdateWrapper<Support> supportUpdateWrapper =new UpdateWrapper<>();
+        supportUpdateWrapper.eq("user_id",support.getUserId());
+        supportUpdateWrapper.eq("goods_id",support.getGoodsId());
+        boolean isSuccess = supportService.remove(supportUpdateWrapper);
         if(isSuccess){
             return Result.ok();
         }else

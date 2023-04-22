@@ -19,7 +19,7 @@ public class Support implements Serializable {
     private String UserId;
 
     @TableField("goods_id")
-    private String Goodsid;
+    private String GoodsId;
 
     @TableField("goods_name")
     private String GoodsName;
@@ -30,7 +30,7 @@ public class Support implements Serializable {
     @TableField("support_updatetime")
     private String SupportUpdateTime;
 
-    @TableLogic
+
     @TableField("is_deleted")
     private int SupportIsDeleted;
 }

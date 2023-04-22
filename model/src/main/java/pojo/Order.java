@@ -35,6 +35,7 @@ public class Order implements Serializable {
     @TableField("order_realamount")
     private String OrderRealAmount;
 
+    //订单内容
     @TableField("order_content")
     private String OrderContent;
 
@@ -53,13 +54,6 @@ public class Order implements Serializable {
 
     @TableField("is_deleted")
     private int OrderIsDeleted;
-
-    @TableField("goods_id")
-    private String GoodsId;
-
-    @TableField("goods_name")
-    private String GoodsName;
-
 
 
 }

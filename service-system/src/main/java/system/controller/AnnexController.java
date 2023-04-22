@@ -1,6 +1,7 @@
 package system.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import common.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,7 @@ import system.service.AnnexService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Api(tags = "附件管理接口")
@@ -27,7 +29,7 @@ public class AnnexController {
     private AnnexService annexService;
 
     @ApiOperation("添加附件接口")
-    @PostMapping("saveannex/{goodsid}")
+    @PostMapping("upload/saveannex/{goodsid}")
     public Result saveAnnex( @PathVariable String goodsid, MultipartFile file){
         Annex annex = new Annex();
         System.out.println(goodsid);
@@ -46,9 +48,10 @@ public class AnnexController {
         String newName = uuid + ext;
         //拼接图片上传的路径 url+图片名
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
-        String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\img\\";
+        String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\";
         String path = pre + newName;
-        annex.setAnnexAddress(path);
+        String sqlname = "http://localhost:8800/"+newName;
+        annex.setAnnexAddress(sqlname);
         annexService.save(annex);
         try {
             file.transferTo(new File(path));
@@ -58,4 +61,12 @@ public class AnnexController {
         return Result.ok();
     }
 
+    @ApiOperation("根据商品id查询商品附件")
+    @PostMapping("findannexbygoodsid/{goodsid}")
+    public Result findAnnexByGoodsId(@PathVariable String goodsid){
+        QueryWrapper<Annex> annexQueryWrapper = new QueryWrapper<>();
+        annexQueryWrapper.eq("goods_id",goodsid);
+        List<Annex> annexes = annexService.list(annexQueryWrapper);
+        return Result.ok(annexes);
+    }
 }

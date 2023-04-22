@@ -77,7 +77,7 @@ public class GoodsController {
 
 
     @ApiOperation("添加商品接口")
-    @PostMapping("savegoods/{goodsname}/{goodscategory}/{goodsprice}/{goodsintro}/{goodsdiscount}")
+    @PostMapping("upload/savegoods/{goodsname}/{goodscategory}/{goodsprice}/{goodsintro}/{goodsdiscount}")
     public Result saveGoods(MultipartFile file ,@PathVariable String goodsname,@PathVariable String goodsprice,@PathVariable String goodscategory,@PathVariable String goodsintro,@PathVariable String goodsdiscount){
 
         Goods goods = new Goods();
@@ -105,18 +105,19 @@ public class GoodsController {
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
         String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\";
         String path = pre + newName;
-        goods.setGoodsPicture(path);
+        String sqlname = "http://localhost:8800/"+newName;
+        goods.setGoodsPicture(sqlname);
 
         try {
             file.transferTo(new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
         boolean isSuccess = goodsService.save(goods);
+        String a = goods.getGoodsId();
+        System.out.println(a);
         if(isSuccess){
-            return Result.ok();
+            return Result.ok(a);
         }else
             return Result.fail();
     }

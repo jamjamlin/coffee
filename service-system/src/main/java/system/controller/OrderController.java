@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pojo.Goods;
 import pojo.Order;
+import pojo.OrderGoods;
 import system.service.GoodsService;
+import system.service.OrderGoodsService;
 import system.service.OrderService;
 import vo.CoffeeCateGoryVo;
 import vo.Time;
@@ -29,12 +31,16 @@ public class OrderController {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private OrderGoodsService orderGoodsService;
+
     @ApiOperation("添加订单接口")
     @PostMapping("saveorder")
     public Result saveOrder(@RequestBody Order order){
         boolean isSuccess = orderService.save(order);
+        String orderId = order.getOrderId();
         if(isSuccess){
-            return Result.ok();
+            return Result.ok(orderId);
         }else
             return Result.fail();
     }
@@ -177,17 +183,31 @@ public class OrderController {
             return Result.fail();
     }
     @ApiOperation("更新订单状态为已完成")
-    @PostMapping("finnishorderbyorderid/{orderid}/{goodsid}")
-    public  Result finnishOrderByOrderId(@PathVariable int orderid,@PathVariable int goodsid){
+    @PostMapping("finnishorderbyorderid/{orderid}")
+    public  Result finnishOrderByOrderId(@PathVariable int orderid){
         UpdateWrapper<Order> orderUpdateWrapper = new UpdateWrapper<>();
         orderUpdateWrapper.set("order_state","已完成");
         orderUpdateWrapper.eq("order_id",orderid);
         boolean isSuccess = orderService.update(orderUpdateWrapper);
+
+
+
+        QueryWrapper<OrderGoods> orderGoodsQueryWrapper =new QueryWrapper<>();
+        orderGoodsQueryWrapper.eq("order_id",orderid);
+        List<OrderGoods> list = orderGoodsService.list(orderGoodsQueryWrapper);
+        System.out.println(list);
+        int size = list.size();
+        String abc;
+        //list.get(0).getGoodsId();
         if(isSuccess){
-            UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<>();
-            goodsUpdateWrapper.eq("goods_id",goodsid);
-            goodsUpdateWrapper.setSql("goods_number =  goods_number + 1");
-            goodsService.update(goodsUpdateWrapper);
+
+            for (int i=0;i<size;i++){
+                UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<>();
+                abc = list.get(i).getGoodsId();
+                goodsUpdateWrapper.eq("goods_id",abc);
+                goodsUpdateWrapper.setSql("goods_ number =  goods_number + 1");
+                goodsService.update(goodsUpdateWrapper);
+            }
             return Result.ok();
         }else
             return Result.fail();

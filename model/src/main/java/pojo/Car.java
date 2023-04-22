@@ -22,7 +22,7 @@ public class Car implements Serializable {
     @TableField("goods_type")
     private String GoodsType;
 
-    @TableLogic
+
     @TableField("is_deleted")
     private  int CarIsDeleted;
 }
