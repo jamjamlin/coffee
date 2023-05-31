@@ -189,18 +189,13 @@ public class OrderController {
         orderUpdateWrapper.set("order_state","已完成");
         orderUpdateWrapper.eq("order_id",orderid);
         boolean isSuccess = orderService.update(orderUpdateWrapper);
-
-
-
         QueryWrapper<OrderGoods> orderGoodsQueryWrapper =new QueryWrapper<>();
         orderGoodsQueryWrapper.eq("order_id",orderid);
         List<OrderGoods> list = orderGoodsService.list(orderGoodsQueryWrapper);
         System.out.println(list);
         int size = list.size();
         String abc;
-        //list.get(0).getGoodsId();
         if(isSuccess){
-
             for (int i=0;i<size;i++){
                 UpdateWrapper<Goods> goodsUpdateWrapper = new UpdateWrapper<>();
                 abc = list.get(i).getGoodsId();

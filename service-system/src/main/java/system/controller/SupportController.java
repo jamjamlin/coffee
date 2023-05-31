@@ -28,14 +28,19 @@ public class SupportController {
     @PostMapping("savesupport")
     public Result saveSupport(@RequestBody Support support){
         boolean isSuccess = supportService.save(support);
-        UpdateWrapper<Goods> goodsUpdateWrapper =new UpdateWrapper<>();
-        goodsUpdateWrapper.eq("goods_id",support.getGoodsId());
-        goodsUpdateWrapper.setSql("goods_state =  goods_state + 1");
-        boolean update = goodsService.update(goodsUpdateWrapper);
-        if(isSuccess&&update){
-            return Result.ok();
-        }else
+        if(isSuccess){
+            UpdateWrapper<Goods> goodsUpdateWrapper =new UpdateWrapper<>();
+            goodsUpdateWrapper.eq("goods_id",support.getGoodsId());
+            goodsUpdateWrapper.setSql("goods_state =  goods_state + 1");
+            boolean update = goodsService.update(goodsUpdateWrapper);
+            if (update){
+                return Result.ok();
+            } else {
+                return Result.fail();
+            }
+        } else{
             return Result.fail();
+        }
     }
     @ApiOperation("取消点赞")
     @DeleteMapping("deletesupport")

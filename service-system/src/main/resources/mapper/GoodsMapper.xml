@@ -10,7 +10,7 @@
     </sql>
 
     <select id="selectGoodsPage" resultMap="GoodsMap">
-        select <include refid="goods_columns"/>
+        select *
         from t_goods
         <where>
         <if test="vo.GoodsName != null and vo.GoodsName !=''">
