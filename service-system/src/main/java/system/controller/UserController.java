@@ -130,8 +130,18 @@ public class UserController {
             return Result.ok();
         }else
             return Result.fail();
-
-
+    }
+    @ApiOperation("降为顾客接口")
+    @PostMapping("demoteuser/{userid}")
+    public Result demoteUser(@PathVariable String userid){
+        UpdateWrapper<User> wrapper =new UpdateWrapper<>();
+        wrapper.eq("user_id",userid);
+        wrapper.setSql("user_role = '顾客'");
+        boolean isSuccess = userService.update(wrapper);
+        if(isSuccess){
+            return Result.ok();
+        }else
+            return Result.fail();
     }
 
 }

@@ -48,9 +48,9 @@ public class AnnexController {
         String newName = uuid + ext;
         //拼接图片上传的路径 url+图片名
         ApplicationHome applicationHome = new ApplicationHome(this.getClass());
-        String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\";
+        String pre = applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath() + "\\src\\main\\resources\\static\\images\\";
         String path = pre + newName;
-        String sqlname = "http://localhost:8800/"+newName;
+        String sqlname = "http://localhost:8800/images/"+newName;
         annex.setAnnexAddress(sqlname);
         annexService.save(annex);
         try {
